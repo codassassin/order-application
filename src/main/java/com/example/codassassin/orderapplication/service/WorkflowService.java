@@ -30,10 +30,13 @@ public class WorkflowService {
         System.out.println("[+] Deployed ");
     }
 
-    public void getDeliveryOrders() {
-        List<TaskInfo> tasks = taskService.create.taskDefinitionId("confirmOrderPickup").list();
-        List<Id> ids = new ArrayList<>();
-        ids = tasks.forEach(id -> tasks.getId());
+    public List<String> getDeliveryOrders() {
+        List<Task> tasks = taskService.createTaskQuery().taskDefinitionId("confirmOrderPickup").list();
+        List<String> ids = new ArrayList<>();
+        for (Task task : tasks) {
+            ids.add(task.getId());
+        }
+        return ids;
     }
 
 

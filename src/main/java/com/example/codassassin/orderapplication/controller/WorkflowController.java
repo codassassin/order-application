@@ -35,8 +35,8 @@ public class WorkflowController {
     }
 
     @GetMapping("/getPickupTasks")
-    public void getPickupTasks() {
-        return new List<> (workflowService.)
+    public List<String> getPickupTasks() {
+        return workflowService.getDeliveryOrders();
     }
 
     @PostMapping("/confirm")
