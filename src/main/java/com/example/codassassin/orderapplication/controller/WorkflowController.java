@@ -32,6 +32,7 @@ public class WorkflowController {
     @PostMapping("/order")
     public void order(@RequestBody Order order) {
         System.out.println("Ordered ...");
+        workflowService.startWorkflow();
     }
 
     @GetMapping("/getPickupTasks")
@@ -39,14 +40,20 @@ public class WorkflowController {
         return workflowService.getDeliveryOrders();
     }
 
+    @GetMapping("/getPendingList")
+    public List<String> getPending() {
+        return workflowService.getDeliveryOrders();
+    }
+
     @PostMapping("/confirm")
     public void confirm(@RequestParam String taskId) {
         taskService.complete(taskId);
-        System.out.println();
+        System.out.println("Order picked up");
     }
 
-    public void startWorkflow() {
-        System.out.println("Starting workflow...");
-        runtimeService.startProcessInstanceByKey("orderApplication");
+    @PostMapping("/confirm-delivery")
+    public void confirmDelivery(@RequestParam String taskId) {
+        taskService.complete(taskId);
+        System.out.println("Delivered");
     }
 }

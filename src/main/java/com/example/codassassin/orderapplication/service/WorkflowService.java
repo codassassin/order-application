@@ -1,8 +1,10 @@
 package com.example.codassassin.orderapplication.service;
 
 import org.flowable.engine.RepositoryService;
+import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.repository.Deployment;
+import org.flowable.task.api.DelegationState;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.TaskInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class WorkflowService {
     @Autowired
     TaskService taskService;
 
+    @Autowired
+    RuntimeService runtimeService;
+
     public void deployProcessDefinition() {
         Deployment deployment = repositoryService
                 .createDeployment()
@@ -31,7 +36,7 @@ public class WorkflowService {
     }
 
     public List<String> getDeliveryOrders() {
-        List<Task> tasks = taskService.createTaskQuery().taskDefinitionId("confirmOrderPickup").list();
+        List<Task> tasks = taskService.createTaskQuery().taskDefinitionId("confirmOrderPickup").taskDelegationState(DelegationState.PENDING).list();
         List<String> ids = new ArrayList<>();
         for (Task task : tasks) {
             ids.add(task.getId());
@@ -39,7 +44,10 @@ public class WorkflowService {
         return ids;
     }
 
-
+    public void startWorkflow() {
+        System.out.println("Starting workflow...");
+        runtimeService.startProcessInstanceByKey("orderApplication");
+    }
 }
 
 
